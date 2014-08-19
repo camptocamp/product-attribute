@@ -51,10 +51,6 @@ class ProductImage(orm.Model):
         'product_id': fields.many2one('product.product', 'Product'),
     }
 
-    _defaults= {
-        'sequence': 0,
-    }
-
     def onchange_name(self, cr, uid, ids, file_name, name, context=None):
         if not name:
             name, extension = os.path.splitext(file_name)
@@ -62,3 +58,17 @@ class ProductImage(orm.Model):
                 name = name.replace(mapping[0], mapping[1])
             return {'value': {'name': name}}
         return {}
+    
+    def create(self, cr, uid, vals, context=None):
+        if not 'sequence' in vals:
+            cr.execute("""SELECT max(sequence)
+                FROM product_image
+                WHERE product_id = %s""",
+                (vals['product_id'],))
+            max_sequence = cr.fetchone()[0]
+            if max_sequence is not None:
+                vals['sequence'] = max_sequence + 1
+            else:
+                vals['sequence'] = 0
+        return super(ProductImage, self).create(
+            cr, uid, vals, context=context)
