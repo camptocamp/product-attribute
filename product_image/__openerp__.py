@@ -39,6 +39,7 @@ This module replace the module 'product_images'
  ],
  'data': [
      'product_image_view.xml',
+     'security/ir.model.access.csv',
  ],
  'installable': True,
  'application': True,
