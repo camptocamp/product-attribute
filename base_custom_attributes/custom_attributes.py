@@ -63,8 +63,8 @@ class attribute_option(orm.Model):
             'Product Attribute',
             required=True),
         'sequence': fields.integer('Sequence'),
-        'code': fields.char('Code', size=128, required=True,
-                                help=('Code of the option')),
+        'code': fields.char('Code', size=128,
+                            help=('Code of the option')),
         'active': fields.boolean('Active'),
     }
 
