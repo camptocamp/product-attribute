@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="product.product_product_1" model="product.product">
+        <field name="name">GAP Analysis Service</field>
+        <field name="default_code">GAPANA</field>            
+    </record>
+    <record id="product.product_product_2" model="product.product">
+        <field name="name">Support Services</field>
+        <field name="default_code">SUSER</field>         
+    </record>
+    <record id="product.product_product_5c" model="product.product">
+        <field name="name">Parts Replacement</field>
+        <field name="default_code">PAREP</field>                 
+    </record>
+    <record id="product.product_product_6c" model="product.product">
+        <field name="name">Repair</field>
+        <field name="default_code">REP</field>                 
+    </record>
+    <record id="product.product_product_11c" model="product.product">
+        <field name="name">Cleaning</field>
+        <field name="default_code">CLEN</field>         
+        </record>
+    <record id="stock.test_quant_product" model="product.product">
+        <field name="name">Whiteboard</field>
+        <field name="default_code">WTBO</field>         
+    </record>     
+    <!-- Archived Demo Products without Internal Reference Value -->
+    <record id="product.membership_0" model="product.product">
+        <field name="name">Gold Membership</field>
+        <field name="default_code">GMEM</field>
+    </record>
+    <record id="product.membership_1" model="product.product">
+        <field name="name">Silver Membership</field>
+        <field name="default_code">SMEM</field>
+    </record>
+    <record id="product.membership_2" model="product.product">
+        <field name="name">Basic Membership</field>
+        <field name="default_code">BMEM</field>
+    </record>
+</odoo>
