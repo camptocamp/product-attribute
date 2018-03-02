@@ -4,7 +4,17 @@
 from odoo import fields, models
 
 
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    default_code = fields.Char('Internal Reference', index=True, required=True)
+
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    default_code = fields.Char('Internal Reference', index=True, required=True)
+    def _get_default_code(self):
+        return self.product_tmpl_id.default_code
+
+    default_code = fields.Char('Internal Reference', index=True, required=True,
+                               default=_get_default_code)
