@@ -1,16 +1,17 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-   :alt: License: AGPL-3
+    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+    :alt: License: AGPL-3
 
 ======================================================
 Set as Mandatory field for  Product Internal Reference
 ======================================================
 
-This module sets the field internal reference(default_code) of the product 
+This module sets the field internal reference (default_code) of the product
 as mandatory.
 
 Usage
 =====
+
 * Unable to save a product with an empty or blank internal reference.  
 
 Bug Tracker
@@ -45,8 +46,8 @@ Maintainer
 ----------
 
 .. image:: https://odoo-community.org/logo.png
-   :alt: Odoo Community Association
-   :target: https://odoo-community.org
+    :alt: Odoo Community Association
+    :target: https://odoo-community.org
 
 This module is maintained by the OCA.
 
