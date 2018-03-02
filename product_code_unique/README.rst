@@ -1,6 +1,6 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-   :alt: License: AGPL-3
+    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+    :alt: License: AGPL-3
 
 ==================================
 Unique Product Internal Reference
@@ -11,9 +11,10 @@ to make it unique across the database.
 
 Usage
 =====
+
 * For this module to be succesfully installed, there should be no 2 existing 
 records that has the same Internal Reference including empty fields. A 
-correction of the records needs to be done prior on the installation of this
+correction of the records needs to be done prior to the installation of this
 module.
 
 Bug Tracker
@@ -48,8 +49,8 @@ Maintainer
 ----------
 
 .. image:: https://odoo-community.org/logo.png
-   :alt: Odoo Community Association
-   :target: https://odoo-community.org
+    :alt: Odoo Community Association
+    :target: https://odoo-community.org
 
 This module is maintained by the OCA.
 
