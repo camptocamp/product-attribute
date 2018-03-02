@@ -18,7 +18,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     def _get_default_code(self):
-        return self.product_tmpl_id.default_code
+        return random.randint(100000000000,999999999999)
 
     default_code = fields.Char('Internal Reference', index=True, required=True,
                                default=_get_default_code)
