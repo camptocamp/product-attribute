@@ -67,6 +67,13 @@ class attribute_option(orm.Model):
             'Product Attribute',
             required=True),
         'sequence': fields.integer('Sequence'),
+        'code': fields.char('Code', size=128,
+                            help=('Code of the option')),
+        'active': fields.boolean('Active'),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
     def name_change(self, cr, uid, ids, name, relation_model_id, context=None):
