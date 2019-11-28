@@ -14,7 +14,7 @@ class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
 
     type_is_pallet = fields.Boolean(
-        related='product_packaging_type_id.is_pallet'
+        related='packaging_type_id.is_pallet'
     )
     layers = fields.Integer()
     packs_per_layer = fields.Integer(help='number of boxes/bags on a layer')
