@@ -10,7 +10,7 @@
                     <field name="length" />
                     <field name="width" />
                     <field name="height" />
-                    <field name="weight" />
+                    <field name="max_weight" />
                     <field name="volume" />
                 </group>
             </group>
