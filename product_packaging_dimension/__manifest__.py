@@ -7,7 +7,6 @@
     'category': 'Product',
     'author': 'Camptocamp, Odoo Community Association (OCA)',
     'license': 'AGPL-3',
-    'conflicts': ['delivery'],
     'depends': [
         'product',
     ],
