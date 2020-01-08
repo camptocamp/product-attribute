@@ -7,7 +7,7 @@ class ProductPackaging(models.Model):
     _inherit = "product.packaging"
 
     max_weight = fields.Float("Weight (kg)")
-    # lngth IS NOT A TYPE https://github.com/odoo/odoo/issues/41353
+    # lngth IS NOT A TYPO https://github.com/odoo/odoo/issues/41353
     lngth = fields.Integer("Length (mm)", help="length in millimeters")
     width = fields.Integer("Width (mm)", help="width in millimeters")
     height = fields.Integer("Height (mm)", help="height in millimeters")
