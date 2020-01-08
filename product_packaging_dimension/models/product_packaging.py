@@ -7,8 +7,8 @@ class ProductPackaging(models.Model):
     _inherit = "product.packaging"
 
     max_weight = fields.Float("Weight (kg)")
-    # FIXME https://github.com/odoo/odoo/issues/41353
-    length = fields.Integer("Length (mm)", help="length in millimeters")
+    # lngth IS NOT A TYPE https://github.com/odoo/odoo/issues/41353
+    lngth = fields.Integer("Length (mm)", help="length in millimeters")
     width = fields.Integer("Width (mm)", help="width in millimeters")
     height = fields.Integer("Height (mm)", help="height in millimeters")
     volume = fields.Float(
@@ -20,7 +20,7 @@ class ProductPackaging(models.Model):
         help="volume in cubic meters",
     )
 
-    @api.depends("length", "width", "height")
+    @api.depends("lngth", "width", "height")
     def _compute_volume(self):
         for pack in self:
-            pack.volume = (pack.length * pack.width * pack.height) / 1000.0 ** 3
+            pack.volume = (pack.lngth * pack.width * pack.height) / 1000.0 ** 3
