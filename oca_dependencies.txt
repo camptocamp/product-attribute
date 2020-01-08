@@ -1,0 +1,2 @@
+product-attribute https://github.com/grindtildeath/product-attribute 13.0-mig-product_packaging_type_pallet
+product-attribute https://github.com/guewen/product-attribute 13.0-add-product_packaging_type
