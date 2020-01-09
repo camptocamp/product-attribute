@@ -1,4 +1,4 @@
-# Copyright 2019 Camptocamp SA
+# Copyright 2019-2020 Camptocamp SA
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl)
 from odoo import api, fields, models
 
@@ -9,6 +9,8 @@ class ProductPackaging(models.Model):
     max_weight = fields.Float("Weight (kg)")
     # lngth IS NOT A TYPO https://github.com/odoo/odoo/issues/41353
     lngth = fields.Integer("Length (mm)", help="length in millimeters")
+    # Although it feels weird to use Integer in millimeters, we use Int to
+    # override the fields from delivery module instead of defining new ones
     width = fields.Integer("Width (mm)", help="width in millimeters")
     height = fields.Integer("Height (mm)", help="height in millimeters")
     volume = fields.Float(
