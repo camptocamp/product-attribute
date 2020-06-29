@@ -9,9 +9,6 @@ class ProductPackagePrice(models.TransientModel):
     _name = "product.package.price.wizard"
     _description = "Wizard to compute unit price from packaging price"
 
-    def _default_product_tmpl_id(self):
-        return self.env["product.template"].browse(self._context.get("product_tmpl_id"))
-
     def _default_product_pricelist_item_id(self):
         if self._context.get("active_model") != "product.pricelist.item":
             return False
@@ -22,7 +19,12 @@ class ProductPackagePrice(models.TransientModel):
             return False
         return self.env["product.supplierinfo"].browse(self._context.get("active_id"))
 
-    product_id = fields.Many2one("product.template", default=_default_product_tmpl_id)
+    product_id = fields.Many2one(
+        "product.template",
+        default=lambda self: self.env["product.template"].browse(
+            self._context.get("product_tmpl_id")
+        ),
+    )
     product_pricelist_item_id = fields.Many2one(
         "product.pricelist.item", default=_default_product_pricelist_item_id
     )
@@ -53,7 +55,7 @@ class ProductPackagePrice(models.TransientModel):
         elif not self.selected_packaging_id.qty:
             self.unit_price = 0.0
             self.warning_message = _(
-                "Unit price can not be computed because the selected"
+                "Unit price cannot be computed because the selected"
                 "packaging has no quantity set."
             )
         else:
@@ -68,7 +70,7 @@ class ProductPackagePrice(models.TransientModel):
         if not self.selected_packaging_id.qty:
             raise UserError(
                 _(
-                    "Unit price can not be computed because the selected"
+                    "Unit price cannot be computed because the selected"
                     "packaging has no quantity set."
                 )
             )
@@ -77,18 +79,15 @@ class ProductPackagePrice(models.TransientModel):
 
     @api.depends("product_id")
     def _compute_packaging_ids(self):
-        if len(self.product_id.product_variant_ids) == 1:
-            self.packaging_ids = self.product_id.product_variant_ids.packaging_ids
-        else:
-            self.packaging_ids = False
+        self.packaging_ids = self.product_id.mapped("product_variant_ids.packaging_ids")
 
-    def save(self):
+    def action_set_price(self):
         if not self.packaging_price:
             return
         if not self.selected_packaging_id.qty:
             raise UserError(
                 _(
-                    "Unit price can not be computed because the selected"
+                    "Unit price cannot be computed because the selected"
                     "packaging has no quantity set."
                 )
             )
