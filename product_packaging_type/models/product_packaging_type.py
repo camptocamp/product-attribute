@@ -51,7 +51,8 @@ class ProductPackaging(models.Model):
         ondelete="restrict",
         default=lambda p: p.default_packaging_type_id(),
     )
-    type_has_gtin = fields.Boolean(related="packaging_type_id.has_gtin", readonly=True)
+    type_has_gtin = fields.Boolean(readonly=True, compute="_compute_type_has_gtin")
+
     type_sequence = fields.Integer(
         string="Type sequence",
         related="packaging_type_id.sequence",
@@ -61,6 +62,13 @@ class ProductPackaging(models.Model):
     qty_per_type = fields.Html(
         compute="_compute_qty_per_type", string="Qty per package type"
     )
+
+    @api.depends("packaging_type_id", "packaging_type_id.has_gtin", "qty")
+    def _compute_type_has_gtin(self):
+        for packaging in self:
+            packaging.type_has_gtin = packaging.packaging_type_id.has_gtin
+            if not packaging.qty:
+                packaging.type_has_gtin = False
 
     @api.depends(
         "product_id",
