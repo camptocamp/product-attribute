@@ -15,13 +15,12 @@ class ProductProduct(models.Model):
                 "_with_packaging_weight": True,
             }
         ).product_qty_by_packaging(qty)
-        total_weight = 0
-        for packaging_dict in qty_by_packaging_with_weight:
-            if packaging_dict.get("is_unit"):
-                pack_weight = self.weight
-            else:
-                pack_weight = packaging_dict.get("weight")
-            total_weight += pack_weight * packaging_dict.get("qty")
+        total_weight = sum(
+            [
+                pck.get("qty", 0) * pck.get("weight", 0)
+                for pck in qty_by_packaging_with_weight
+            ]
+        )
         return total_weight
 
     def _prepare_qty_by_packaging_values(self, packaging_tuple, qty_per_pkg):

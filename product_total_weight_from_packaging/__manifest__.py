@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl)
 {
     "name": "Product Total Weight From Packaging",
-    "summary": "Compute product quantity to pick by packaging",
+    "summary": "Compute estimated weight based on product's packaging weights",
     "version": "13.0.1.3.0",
     "development_status": "Alpha",
     "category": "Warehouse Management",
