@@ -72,20 +72,39 @@ class TestBarcodeTemplateRequired(TestBarcodeBase):
         self.assertEqual(record.barcode, "PROD-A")
 
     def test_validation_create(self):
-        """Can create a record w/out barcode since the constraint is not enabled."""
+        """Cannot create a record w/out barcode as constraint is enabled."""
         with self.assertRaises(exceptions.ValidationError) as err:
             self.env["product.product"].create(
-                {"name": "Variant A", "default_code": "VAR-A"}
+                [{"name": "Variant A"}, {"name": "Variant B"}, {"name": "Variant C"}]
             )
-
-        self.assertEqual(err.exception.name, "Product 'Variant A' has no barcode!")
+        self.assertEqual(
+            err.exception.name,
+            "These products have no barcode:"
+            "\n\n  * Variant A\n  * Variant B\n  * Variant C",
+        )
+        # Defaults to default_code if not passed explicitely
+        prod1 = self.env["product.product"].create(
+            {"name": "Variant A", "default_code": "VAR-A"}
+        )
+        self.assertEqual(prod1.barcode, prod1.default_code)
+        # pass it at creation, value is kept
+        prod2 = self.env["product.product"].create(
+            {"name": "Variant A", "default_code": "VAR-A", "barcode": "VAR-A-XYZ"}
+        )
+        self.assertEqual(prod2.barcode, "VAR-A-XYZ")
 
     def test_validation_write(self):
-        """Can create a record w/out barcode since the constraint is not enabled."""
+        """Cannot write a record w/out barcode as constraint is enabled."""
         prod = self.env["product.product"].create(
             {"name": "Variant A", "default_code": "VAR-A", "barcode": "VAR-A"}
         )
+        # If you unset the barcode, it will be rolled back to default_code
+        prod.barcode = False
+        self.assertEqual(prod.barcode, "VAR-A")
+        # Unless you unset both
         with self.assertRaises(exceptions.ValidationError) as err:
-            prod.barcode = False
+            prod.write({"default_code": False, "barcode": False})
 
-        self.assertEqual(err.exception.name, "Product 'Variant A' has no barcode!")
+        self.assertEqual(
+            err.exception.name, "These products have no barcode:\n\n  * Variant A"
+        )

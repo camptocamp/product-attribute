@@ -10,5 +10,9 @@
     "license": "LGPL-3",
     "installable": True,
     "depends": ["product"],
-    "data": ["views/res_config_settings.xml"],
+    "data": [
+        "views/res_config_settings.xml",
+        "views/product_template_view.xml",
+        "views/product_view.xml",
+    ],
 }
