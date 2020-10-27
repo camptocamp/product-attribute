@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo13-addon-packaging_uom',
         'odoo13-addon-product_assortment',
+        'odoo13-addon-product_barcode_required',
         'odoo13-addon-product_bom_revision',
         'odoo13-addon-product_code_mandatory',
         'odoo13-addon-product_code_unique',
@@ -18,6 +19,7 @@ setuptools.setup(
         'odoo13-addon-product_manufacturer',
         'odoo13-addon-product_medical',
         'odoo13-addon-product_multi_category',
+        'odoo13-addon-product_multi_price',
         'odoo13-addon-product_packaging_dimension',
         'odoo13-addon-product_packaging_type',
         'odoo13-addon-product_packaging_type_pallet',
