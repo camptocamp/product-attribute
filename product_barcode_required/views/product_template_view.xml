@@ -16,7 +16,7 @@
            but I don't remember its name :) -->
                 <attribute name="attrs">{
             'invisible': [('product_variant_count', '>', 1)],
-            'required': [('is_barcode_required', '=', True)]
+            'required': [('is_barcode_required', '=', True), ('product_variant_count', '&lt;', 2)]
           }</attribute>
             </field>
         </field>
