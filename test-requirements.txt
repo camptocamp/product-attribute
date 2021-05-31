@@ -1,0 +1,1 @@
+odoo14-addon-base-multi-image @ git+https://github.com/hailangvn/server-tools@14.0-mig-base_multi_image#subdirectory=setup/base_multi_image
