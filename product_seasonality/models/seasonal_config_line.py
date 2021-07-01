@@ -76,7 +76,7 @@ class SeasonalConfigLine(models.Model):
     def _name_get(self):
         parts = [
             f"[{self.seasonal_config_id.display_name}]",
-            self.product_id.display_name,
+            self.product_id.display_name or self.product_template_id.display_name,
             f"({self.id})",
         ]
         return " ".join(parts)
