@@ -14,9 +14,9 @@ class ProductPackaging(models.Model):
         ("positive_width", "CHECK(width>=0)", "Width must be positive"),
         ("positive_length", "CHECK(packaging_length>=0)", "Length must be positive"),
         (
-            "positive_weight",
-            "CHECK(weight>=0)",
-            "Weight must be positive",
+            "positive_max_weight",
+            "CHECK(max_weight>=0)",
+            "Max Weight must be positive",
         ),
     ]
     height = fields.Integer()
