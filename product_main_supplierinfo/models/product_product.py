@@ -49,5 +49,7 @@ class ProductProduct(models.Model):
             )
         )
         if not sellers:
-            sellers = all_sellers
+            sellers = all_sellers.filtered(lambda s: (s.product_id == self))
+            if not sellers:
+                sellers = all_sellers
         return sellers
