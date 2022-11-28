@@ -12,9 +12,9 @@
     "license": "LGPL-3",
     "depends": ["product", "stock"],
     "data": [
-        "data/product_packaging_type.xml",
+        "data/product_packaging_level.xml",
         "security/ir.model.access.csv",
-        "views/product_packaging_type_view.xml",
+        "views/product_packaging_level_view.xml",
         "views/product_packaging_view.xml",
     ],
     "installable": True,
