@@ -28,15 +28,46 @@ class ProductPackaging(models.Model):
     qty_per_level = fields.Char(
         compute="_compute_qty_per_level", string="Qty per package level"
     )
+    name_type = fields.Selection(
+        string="Name Based On",
+        selection=[
+            ("by_package_level", "Package Level Name"),
+            ("by_package_type", "Package Type Name"),
+            ("user_defined", "User Defined"),
+        ],
+        default="by_package_level",
+        help=(
+            "config to set name of product packaging. Three options:"
+            "- The package level name (default)"
+            "- The package type name (if groups='stock.group_tracking_lot')"
+            "- user defined: free text value defined"
+        ),
+    )
 
     def default_packaging_level_id(self):
         return self.env["product.packaging.level"].search(
             [("is_default", "=", True)], limit=1
         )
 
+    @api.constrains("name_type")
+    def _check_packaging_name(self):
+        for packaging in self:
+            activated_packages = self.env.user.has_group("stock.group_tracking_lot")
+            if packaging.name_type == "by_package_type" and not activated_packages:
+                raise ValidationError(
+                    _(
+                        "Packaging name based on package type is only allowed"
+                        " after activating the option Packages in Inventory >"
+                        " Configuration > Settings !"
+                    )
+                )
+
     @api.constrains("packaging_level_id", "product_id")
     def _check_one_packaging_level_per_product(self):
-        for packaging in self:
+        packages_name_by_level = self.filtered(
+            lambda p: p.name_type == "by_package_level"
+        )
+        for packaging in packages_name_by_level:
             product = packaging.product_id
             # do not use a mapped/filtered because it would union the duplicates
             packaging_level_ids = [
@@ -116,15 +147,31 @@ class ProductPackaging(models.Model):
             res.append((code, new_qty))
         return res
 
-    @api.onchange("packaging_level_id")
+    @api.onchange(
+        "package_type_id",
+    )
+    def _onchange_package_type(self):
+        package_type_level_id = self.package_type_id.packaging_level_id
+        if package_type_level_id:
+            self.packaging_level_id = package_type_level_id
+
+    @api.onchange("packaging_level_id", "package_type_id", "name_type", "name")
     def _onchange_name(self):
-        if self.packaging_level_id:
-            self.name = self.packaging_level_id.name
+        new_name = self.name
+        if self.name_type == "by_package_level":
+            new_name = self.packaging_level_id.name
+        elif self.name_type == "by_package_type":
+            new_name = self.package_type_id.name
+        self.name = new_name
 
     def name_get(self):
         result = []
         for record in self:
-            if record.product_id and record.packaging_level_id:
+            if (
+                record.product_id
+                and record.packaging_level_id
+                and record.name_type == "by_package_level"
+            ):
                 result.append((record.id, record.packaging_level_id.display_name))
             else:
                 result.append((record.id, record.name))
