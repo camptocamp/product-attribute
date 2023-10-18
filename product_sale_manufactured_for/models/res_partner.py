@@ -36,8 +36,9 @@ class ResPartner(models.Model):
                     customers_name = ", ".join(customers.mapped("name"))
                     product.message_post(
                         body=_(
-                            f"The product was manufactured for {customers_name} "
+                            "The product was manufactured for %(customers_name)s "
                             "but the customer(s) has been archived."
                         )
+                        % {"customers_name": customers_name}
                     )
         return res
