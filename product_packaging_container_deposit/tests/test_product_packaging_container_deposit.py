@@ -4,7 +4,6 @@ from .common import Common
 
 
 class TestProductPackagingContainerDeposit(Common):
-    # TODO: test the mixins using fake model + odoo-test-helper to not depend on so and po tests
     def test_product_container_deposit_qties_with_not_set_container_deposit_on_packaging_type(
         self,
     ):
