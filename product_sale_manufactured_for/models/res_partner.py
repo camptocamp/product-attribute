@@ -25,9 +25,9 @@ class ResPartner(models.Model):
                 for row in result:
                     product_to_update[row[0]].append(row[1])
                 products = self.env["product.product"].browse(product_to_update.keys())
-                customer_ids = [
+                customer_ids = {
                     id for values in product_to_update.values() for id in values
-                ]
+                }
                 all_customers = self.env["res.partner"].browse(customer_ids)
                 for product in products:
                     customers = all_customers.filtered(
