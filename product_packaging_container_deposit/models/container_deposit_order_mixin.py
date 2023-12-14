@@ -65,7 +65,7 @@ class OrderMixin(models.AbstractModel):
                     )
             values_lst = []
             for product in deposit_container_qties:
-                if deposit_container_qties[product][0] > 0:
+                if deposit_container_qties[product][0]:
                     values = order.prepare_deposit_container_line(
                         product, deposit_container_qties[product][0]
                     )

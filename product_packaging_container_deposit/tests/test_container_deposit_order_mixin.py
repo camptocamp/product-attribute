@@ -236,3 +236,28 @@ class TestProductPackagingContainerDepositMixin(Common):
         self.order.order_line[0].qty_delivered = 200
         self.assertEqual(pallet_line.qty_delivered, 0)
         self.assertEqual(box_line.qty_delivered, 8)
+
+    def test_order_product_packaging_container_deposit_negative_quantity(self):
+        self.env["container.deposit.order.line.test"].create(
+            [
+                {
+                    "order_id": self.order.id,
+                    "name": self.product_a.name,
+                    "product_id": self.product_a.id,
+                    "product_qty": -280,
+                },
+                {
+                    "order_id": self.order.id,
+                    "name": self.product_c.name,
+                    "product_id": self.product_c.id,
+                    "product_qty": -1,
+                },
+            ]
+        )
+
+        pallet_line = self.order.order_line.filtered(
+            lambda ol: ol.product_id == self.pallet
+        )
+        box_line = self.order.order_line.filtered(lambda ol: ol.product_id == self.box)
+        self.assertEqual(pallet_line.product_qty, -1)
+        self.assertEqual(box_line.product_qty, -11)
