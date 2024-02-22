@@ -9,7 +9,7 @@ from odoo.exceptions import ValidationError
 class ProductPackaging(models.Model):
     _inherit = "product.packaging"
 
-    sequence = fields.Integer(compute="_compute_sequence", store=True)
+    sequence = fields.Integer(compute="_compute_sequence", store=True, readonly=False)
     packaging_level_id = fields.Many2one(
         "product.packaging.level",
         required=True,
