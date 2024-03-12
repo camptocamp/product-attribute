@@ -10,6 +10,7 @@ class ProductPackaging(models.Model):
     _inherit = "product.packaging"
     _order = "product_id, level_sequence"
 
+    name = fields.Char(compute="_compute_name", store=True, readonly=False)
     packaging_level_id = fields.Many2one(
         "product.packaging.level",
         required=True,
@@ -126,11 +127,28 @@ class ProductPackaging(models.Model):
         if package_type_level_id:
             self.packaging_level_id = package_type_level_id
 
-    @api.onchange("packaging_level_id", "package_type_id", "name", "name_policy")
-    def _onchange_name(self):
+    @api.depends(
+        "package_type_id",
+        "name_policy",
+        "packaging_level_id",
+    )
+    def _compute_name(self):
+        for rec in self:
+            rec.name = rec.change_name_policy()
+
+    # Keep this method to respect translations on level name
+    @api.depends("product_id", "packaging_level_id", "name_policy")
+    def _compute_display_name(self):
+        for record in self:
+            if record.product_id and record.packaging_level_id:
+                record.display_name = record.change_name_policy()
+            else:
+                return super()._compute_display_name()
+
+    def change_name_policy(self):
         new_name = self.name
         if self.name_policy == "by_package_level":
             new_name = self.packaging_level_id.display_name
         elif self.name_policy == "by_package_type":
             new_name = self.package_type_id.name
-        self.name = new_name
+        return new_name
