@@ -86,7 +86,9 @@ class OrderMixin(models.AbstractModel):
                         product, deposit_container_qties[product][0]
                     )
                     values_lst.append(Command.create(values))
-            order.write({self._get_order_line_field(): values_lst})
+            order.with_context(update_order_container_deposit_quantity=True).write(
+                {self._get_order_line_field(): values_lst}
+            )
         # Schedule line to delete after commit to avoid caching issue w/ UI
         if line_ids_to_delete:
             self.env.cr.postcommit.add(
