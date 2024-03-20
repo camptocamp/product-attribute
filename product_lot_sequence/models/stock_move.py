@@ -8,7 +8,7 @@ class StockMove(models.Model):
 
     def action_show_details(self):
         """Avoid calling and incrementing the sequence if not needed or already done"""
-        seq_policy = self.env["stock.production.lot"]._get_sequence_policy()
+        seq_policy = self.env["stock.lot"]._get_sequence_policy()
         if seq_policy in ("product", "global"):
             # If move is not supposed to assign serial pass empty string for next serial
             if not self.display_assign_serial:
