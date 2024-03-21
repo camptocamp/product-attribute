@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-07-25 12:11+0000\n"
-"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
+"PO-Revision-Date: 2023-11-03 13:36+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -35,8 +35,8 @@ msgid ""
 "</p>\n"
 msgstr ""
 "\n"
-"<p>Spett.le ${object.partner_id and object.partner_id.name or "
-"'customer'},</p>\n"
+"<p>Spett.le ${object.partner_id and object.partner_id.name or 'customer'},</"
+"p>\n"
 "<p>\n"
 "L'allegato è un documento PDF contenente il \n"
 "<strong>${object.pricelist_id.name}</strong> listino prezzi.\n"
@@ -67,7 +67,7 @@ msgstr "${object.pricelist_id.name}"
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.report_product_pricelist_document
 msgid "<span>Special Pricelist</span>"
-msgstr "<span>Listino prezzi speciale</span>"
+msgstr "<span>Listino speciale</span>"
 
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.report_product_pricelist_document
@@ -97,12 +97,12 @@ msgstr "<strong>Immagine</strong>"
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.report_product_pricelist_document
 msgid "<strong>List Price</strong>"
-msgstr "<strong>Listino prezzi</strong>"
+msgstr "<strong>Prezzo di listino</strong>"
 
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.report_product_pricelist_document
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr "<strong>Nome listino prezzi</strong>:<br/>"
+msgstr "<strong>Nome listino</strong>:<br/>"
 
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.report_product_pricelist_document
@@ -135,13 +135,13 @@ msgid ""
 "Check this field to print only the products defined in the pricelist. The "
 "entries in the list referring to all products will not be displayed."
 msgstr ""
-"Spunta questo campo per stampare solo i prodotti definiti nel listino "
-"prezzi. Le voci nella lista riferite a tutti i prodotti non saranno esposte."
+"Selezionare questa opzione se si vuole stampare solo i prodotti specificati "
+"nel listino. Le righe relative a tutti i prodotti non verranno visualizzate."
 
 #. module: product_pricelist_direct_print
 #: model:ir.model.fields,field_description:product_pricelist_direct_print.field_product_pricelist_print__context_active_model
 msgid "Context Active Model"
-msgstr "Modello contesto attivo"
+msgstr "Contesto modello attivo"
 
 #. module: product_pricelist_direct_print
 #: code:addons/product_pricelist_direct_print/report/product_pricelist_xlsx.py:0
@@ -207,7 +207,7 @@ msgstr "Esporta"
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.view_product_pricelist_print
 msgid "Export Options"
-msgstr "Opzioni esporta"
+msgstr "Opzioni esportazione"
 
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.view_product_pricelist_print
@@ -239,8 +239,8 @@ msgid ""
 "If you enter an X number here, then, for each selected customer, the last X "
 "ordered products will be obtained for the report."
 msgstr ""
-"Se imposti un numero X qui, allora, per ogni cliente selezionato, gli ultimi "
-"X prodotti ordinati saranno usati per la stampa."
+"Se viene inserito un numero X in questo punto, per ogni cliente selezionato, "
+"gli ultimi X prodotti ordinati verranno usati per il resoconto."
 
 #. module: product_pricelist_direct_print
 #: code:addons/product_pricelist_direct_print/report/product_pricelist_xlsx.py:0
@@ -295,7 +295,7 @@ msgstr "Ultimo aggiornamento il"
 #: code:addons/product_pricelist_direct_print/report/product_pricelist_xlsx.py:0
 #, python-format
 msgid "List Price"
-msgstr "Listino prezzi"
+msgstr "Prezzo di listino"
 
 #. module: product_pricelist_direct_print
 #: model:ir.model.fields,field_description:product_pricelist_direct_print.field_product_pricelist_print__max_categ_level
@@ -321,7 +321,7 @@ msgstr "PRODOTTI"
 #. module: product_pricelist_direct_print
 #: model:ir.model.fields,field_description:product_pricelist_direct_print.field_product_pricelist_print__partner_count
 msgid "Partner Count"
-msgstr "Numero partner"
+msgstr "Conteggio partner"
 
 #. module: product_pricelist_direct_print
 #: model:ir.actions.act_window,name:product_pricelist_direct_print.action_item_pricelist_print
@@ -336,7 +336,7 @@ msgstr "Listino prezzi"
 #: code:addons/product_pricelist_direct_print/report/product_pricelist_xlsx.py:0
 #, python-format
 msgid "Price List Name:"
-msgstr "Nome listino prezzi:"
+msgstr "Nome listino:"
 
 #. module: product_pricelist_direct_print
 #: model:ir.model.fields,field_description:product_pricelist_direct_print.field_product_pricelist_print__pricelist_id
@@ -390,12 +390,12 @@ msgstr "Prezzo di vendita"
 #. module: product_pricelist_direct_print
 #: model_terms:ir.ui.view,arch_db:product_pricelist_direct_print.view_product_pricelist_print
 msgid "Send by email"
-msgstr "Invia per email"
+msgstr "Invia per e-mail"
 
 #. module: product_pricelist_direct_print
 #: model:ir.actions.act_window,name:product_pricelist_direct_print.action_partner_pricelist_print
 msgid "Send customer pricelist by EMail"
-msgstr "Invia listino prezzi a cliente per email"
+msgstr "Invia listino prezzi cliente via e-mail"
 
 #. module: product_pricelist_direct_print
 #: model:ir.model.fields,field_description:product_pricelist_direct_print.field_product_pricelist_print__show_standard_price
@@ -425,7 +425,7 @@ msgstr "Mostra immagini prodotto"
 #. module: product_pricelist_direct_print
 #: model:ir.model.fields,field_description:product_pricelist_direct_print.field_product_pricelist_print__show_only_defined_products
 msgid "Show the products defined on pricelist"
-msgstr "Mostra i prodotti definiti sul listino prezzi"
+msgstr "Mostra i prodotti definiti nel listino prezzi"
 
 #. module: product_pricelist_direct_print
 #: code:addons/product_pricelist_direct_print/report/product_pricelist_xlsx.py:0
@@ -449,5 +449,5 @@ msgstr "Riepilogo:"
 #, python-format
 msgid "You must set price list or any customer or any show price option."
 msgstr ""
-"Devi impostare il listino prezzi, oppure un cliente, oppure un'opzione di "
-"visualizzazione prezzo."
+"È necessario impostare il listino o un cliente o una opzione visulizzazione "
+"prezzo."
