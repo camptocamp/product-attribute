@@ -39,7 +39,7 @@ class TestProductPackagingLevel(common.TransactionCase):
 
     def test_name_by_level(self):
         self.packaging.name_policy = "by_package_level"
-        self.assertEqual(self.packaging.name, "Packaging Test")
+        self.assertEqual(self.packaging.name, "Packaging Level Test (TEST2)")
 
     def test_name_by_package_type(self):
         # Required for `package_type_id` to be visible in the view
@@ -48,7 +48,6 @@ class TestProductPackagingLevel(common.TransactionCase):
         )
         self.packaging.name_policy = "by_package_type"
         self.packaging.package_type_id = self.package_type_box
-        self.packaging._onchange_name()
         self.assertEqual(self.packaging.name, "Box")
 
     def test_name_by_user_defined(self):
@@ -61,12 +60,10 @@ class TestProductPackagingLevel(common.TransactionCase):
         self.packaging.name = packaging_name
         # try to change package_type_id
         self.packaging.package_type_id = self.package_type_box
-        self.packaging._onchange_name()
         self.assertEqual(self.packaging.name, packaging_name)
 
         # try to change packaging level
         self.packaging.packaging_level_id = self.level
-        self.packaging._onchange_name()
         self.assertEqual(self.packaging.name, packaging_name)
 
     def test_name_by_package_type_without_group_tracking_lot(self):
