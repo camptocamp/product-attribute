@@ -1,6 +1,8 @@
 # Copyright 2024 Camptocamp (<https://www.camptocamp.com>).
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tests import common, tagged
 
 from .common import CommonProductPricelistAlternative
@@ -92,3 +94,13 @@ class TestPricelistAlternative(
             )._get_product_price(self.usb_adapter, 1.0),
             95,
         )
+
+    def test_check_pricelist_alternative_items_based_on_other_pricelist(self):
+        with self.assertRaises(ValidationError):
+            self.alternative_pricelist_01.item_ids.write(
+                {
+                    "compute_price": "formula",
+                    "base": "pricelist",
+                    "base_pricelist_id": self.alternative_pricelist_02.id,
+                }
+            )
