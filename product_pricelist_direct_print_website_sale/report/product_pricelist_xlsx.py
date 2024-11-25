@@ -6,17 +6,17 @@ from odoo import _, models
 class ProductPricelistXlsx(models.AbstractModel):
     _inherit = "report.product_pricelist_direct_print_xlsx.report"
 
-    def _add_extra_header(self, sheet, book, next_col, header_format):
-        next_col = super()._add_extra_header(sheet, book, next_col, header_format)
+    def _add_extra_header(self, book):
         if book.show_public_category:
-            next_col += 1
-            sheet.write(5, next_col, _("Public Category"), header_format)
-        return next_col
+            return _("Public Category")
+        return super()._add_extra_header(book)
 
-    def _add_extra_info(self, sheet, book, product, row, next_col, **kw):
-        next_col = super()._add_extra_info(sheet, book, product, row, next_col, **kw)
+    def _add_extra_info(self, book, product, **kw):
         if book.show_public_category:
-            next_col += 1
             if product.public_categ_ids:
-                sheet.write(row, next_col, product.public_categ_ids[:1].display_name)
-        return next_col
+                # Show category without format
+                return (product.public_categ_ids[:1].display_name, None)
+            # Return an empty string, as we wouldn't want to write False
+            # in the result
+            return "", None
+        return super()._add_extra_info(book, product, **kw)
