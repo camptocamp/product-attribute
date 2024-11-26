@@ -84,6 +84,7 @@ class ProductPricelistPrint(models.TransientModel):
 
     @api.depends_context("product")
     def _compute_product_price(self):
+        # TODO drop this computed field
         product = self.env.context["product"]
         price = self.get_pricelist_to_print()._get_product_price(
             product, 1, date=self.date
@@ -94,6 +95,20 @@ class ProductPricelistPrint(models.TransientModel):
             self.product_price = product.taxes_id.compute_all(price)["total_included"]
         else:
             self.product_price = price
+
+    def get_price_for_pricelist(self, pricelist, product):
+        # TODO enable this instead
+        # pricelist.ensure_one()
+        # product.ensure_one()
+        # price = pricelist._get_product_price(
+            # product, 1, date=self.date
+        # )
+        # if self.vat_mode == "vat_excl":
+            # return product.taxes_id.compute_all(price)["total_excluded"]
+        # elif self.vat_mode == "vat_incl":
+            # return product.taxes_id.compute_all(price)["total_included"]
+        # return price
+        return self.with_context(product=product).product_price
 
     @api.depends("partner_ids")
     def _compute_partner_count(self):
