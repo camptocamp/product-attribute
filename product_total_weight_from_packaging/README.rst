@@ -73,12 +73,15 @@ Contributors
 -  Akim Juillerat <akim.juillerat@camptocamp.com>
 -  Hughes Damry <hughes.damry@acsone.eu>
 -  Duong (Tran Quoc) <duongtq@trobz.com>
+-  Khoi (Kien Kim) <khoikk@trobz.com>
 
 Other credits
 -------------
 
-The migration of this module from 16.0 to 17.0 was financially supported
-by Camptocamp
+The migration of this module from 17.0 to 18.0 was financially supported
+by:
+
+-  Camptocamp
 
 Maintainers
 -----------
