@@ -13,7 +13,7 @@ class TestProductStatusCase(TestProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        cls.env = cls.env(context=dict(cls.env.context))
         cls.product = cls.env.ref("product.product_product_4")
         cls.product2 = cls.env.ref("product.product_product_4b")
         cls.product_tmpl = cls.product.product_tmpl_id
@@ -135,16 +135,16 @@ class TestProductStatusCase(TestProductCommon):
                 st_env.browse(ds_id.id).with_user(demo_user.id).write(vals)
             wn_expect = cm.exception.args[0]
             self.assertEqual(
-                "Cannot delete/modified state installed by module, state name: %s"
-                % (ds_id.name),
+                f"Cannot delete/modified state installed by module, "
+                f"state name: {ds_id.name}",
                 wn_expect,
             )
             with self.assertRaises(ValidationError) as cm:
                 st_env.browse(ds_id.id).with_user(demo_user.id).unlink()
             wn_expect = cm.exception.args[0]
             self.assertEqual(
-                "Cannot delete/modified state installed by module, state name: %s"
-                % (ds_id.name),
+                f"Cannot delete/modified state installed by module, "
+                f"state name: {ds_id.name}",
                 wn_expect,
             )
         # Allow update default value
