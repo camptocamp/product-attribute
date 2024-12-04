@@ -65,16 +65,19 @@ Contributors
 ------------
 
 -  Thomas Nowicki <thomas.nowicki@camptocamp.com>
+
 -  Simone Orsi <simahawk@gmail.com>
 
-Trobz
+-  [Trobz] (https://trobz.com/):
 
--  Dung Tran <dungtd@trobz.com>
+   -  Dung Tran <dungtd@trobz.com>
+   -  Khoi (Kien Kim) <khoikk@trobz.com>
 
 Other credits
 -------------
 
-The development of this module has been financially supported by:
+The migration of this module from 14.0 to 18.0 was financially supported
+by:
 
 -  Camptocamp
 
