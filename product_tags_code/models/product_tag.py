@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 
-class ProductTemplateTag(models.Model):
+class ProductTag(models.Model):
     _inherit = "product.tag"
 
     code = fields.Char(
