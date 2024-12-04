@@ -7,11 +7,9 @@ from odoo.addons.http_routing.models.ir_http import slugify
 
 
 class ProductTemplateTag(models.Model):
-
     _inherit = "product.template.tag"
 
     code = fields.Char(
-        string="Code",
         compute="_compute_code",
         readonly=False,
         inverse="_inverse_code",
