@@ -3,11 +3,9 @@
 
 from odoo import api, fields, models
 
-from odoo.addons.http_routing.models.ir_http import slugify
-
 
 class ProductTemplateTag(models.Model):
-    _inherit = "product.template.tag"
+    _inherit = "product.tag"
 
     code = fields.Char(
         compute="_compute_code",
@@ -28,10 +26,10 @@ class ProductTemplateTag(models.Model):
     def _compute_code(self):
         for rec in self:
             if rec.name and rec.name.strip():
-                rec.code = slugify(rec.name)
+                rec.code = self.env["ir.http"]._slugify(rec.name)
             else:
                 rec.code = ""
 
     def _inverse_code(self):
         for rec in self:
-            rec.code = slugify(rec.code)
+            rec.code = self.env["ir.http"]._slugify(rec.code)
