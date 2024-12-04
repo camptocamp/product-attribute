@@ -32,7 +32,7 @@ class TestProductTemplateTag(TestProductTemplateTagBase):
         for x in range(3):
             prods_data.append(
                 {
-                    "name": "YO%s" % x,
+                    "name": f"YO{x}",
                     "product_tmpl_ids": [(6, 0, [self.product_tmpl.id])],
                 }
             )
