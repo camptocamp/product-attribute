@@ -4,10 +4,10 @@
 {
     "name": "Product Template Tags",
     "summary": "This addon allow to add code on products tags",
-    "version": "14.0.1.0.1",
+    "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "author": "Camptocamp SA, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/product-attribute",
-    "depends": ["product", "product_template_tags"],
+    "depends": ["product"],
     "data": ["views/product_template_tag.xml"],
 }
