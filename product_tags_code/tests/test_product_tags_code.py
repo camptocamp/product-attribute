@@ -4,13 +4,13 @@
 from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestProductTemplateTag(BaseCommon):
+class TestProductTagsCode(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.product_tmpl = cls.env["product.template"].create({"name": "Test Product"})
 
-    def test_product_template_tag(self):
+    def test_product_tags_code(self):
         product_tmpl_tag = self.env["product.tag"].create(
             {
                 "name": "Test Tag",
@@ -19,7 +19,7 @@ class TestProductTemplateTag(BaseCommon):
         )
         self.assertEqual(product_tmpl_tag.code, "test-tag")
 
-    def test_product_template_tag_writable(self):
+    def test_product_tags_code_writable(self):
         product_tmpl_tag = self.env["product.tag"].create(
             {
                 "name": "Test Tag",
@@ -33,7 +33,7 @@ class TestProductTemplateTag(BaseCommon):
         product_tmpl_tag.write({"name": "test tag name 2"})
         self.assertEqual(product_tmpl_tag.code, "test-tag-name-2")
 
-    def test_product_template_multi_tags(self):
+    def test_product_multi_tags(self):
         prods_data = []
         for x in range(3):
             prods_data.append(
