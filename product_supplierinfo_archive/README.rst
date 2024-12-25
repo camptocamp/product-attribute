@@ -68,6 +68,15 @@ Contributors
 -  Álvaro Trius Béjar <alvaro.trius@forgeflow.com>
 -  Oriol Villamayor <oriol.villamayor@forgeflow.com>
 -  Dhara Solanki <dhara.solanki@initos.com>
+-  Khoi (Kien Kim) <khoikk@trobz.com>
+
+Other credits
+-------------
+
+The migration of this module from 17.0 to 18.0 was financially supported
+by:
+
+-  Camptocamp
 
 Maintainers
 -----------
