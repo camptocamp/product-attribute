@@ -28,9 +28,11 @@ Stock packaging calculator packaging level
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-Glue module for stock_packaging_calculator and product_packaging_type.
+Modify the string representation of the quantities by packaging. Use the
+packaging level code instead of the packaging name.
 
-Mainly to use packaging type's code instead of packaging's name.
+For example, instead of "1 Pallet, 2 Big Box, 7 Box, 10 Units", you get
+"1PL, 2TU, 7CU, 10 Units"
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -68,12 +70,15 @@ Contributors
 -  `Trobz <https://trobz.com>`__:
 
    -  Nguyen Hoang Hiep <hiepnh@trobz.com>
+   -  Khoi (Kien Kim) <khoikk@trobz.com>
 
 Other credits
 -------------
 
-The migration of this module from 13.0 to 14.0 was financially supported
-by Camptocamp
+The migration of this module from 13.0 to 14.0 and then from 16.0 to
+18.0 was financially supported by:
+
+-  Camptocamp
 
 Maintainers
 -----------

@@ -3,7 +3,7 @@
 {
     "name": "Stock packaging calculator packaging level",
     "summary": "Glue module for packaging level",
-    "version": "16.0.1.0.0",
+    "version": "18.0.1.0.0",
     "development_status": "Alpha",
     "category": "Warehouse Management",
     "website": "https://github.com/OCA/stock-logistics-warehouse",
@@ -11,6 +11,6 @@
     "license": "LGPL-3",
     "application": False,
     "installable": True,
-    "auto_install": True,
+    "auto_install": False,
     "depends": ["stock_packaging_calculator", "product_packaging_level"],
 }
