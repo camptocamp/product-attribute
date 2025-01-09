@@ -1,3 +1,3 @@
-Glue module for stock_packaging_calculator and product_packaging_type.
+Modify the string representation of the quantities by packaging. Use the packaging level code instead of the packaging name.
 
-Mainly to use packaging type's code instead of packaging's name.
+For example, instead of "1 Pallet, 2 Big Box, 7 Box, 10 Units", you get "1PL, 2TU, 7CU, 10 Units"

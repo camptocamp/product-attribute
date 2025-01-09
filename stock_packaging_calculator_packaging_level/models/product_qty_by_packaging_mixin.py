@@ -15,8 +15,8 @@ class ProductQtyByPackagingMixin(models.AbstractModel):
     @api.depends_context(
         "lang",
         "qty_by_pkg_total_units",
-        "qty_by_packaging_type_fname",
-        "qty_by_packaging_type_compact",
+        "qty_by_packaging_level_fname",
+        "qty_by_packaging_level_compact",
     )
     def _compute_product_qty_by_packaging_display(self):
         return super()._compute_product_qty_by_packaging_display()
