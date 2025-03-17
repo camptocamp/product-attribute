@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_packaging_calculator
+# 	* product_packaging_calculator
 #
 msgid ""
 msgstr ""
@@ -16,27 +16,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.10.2\n"
 
-#. module: stock_packaging_calculator
-#: model:ir.model.fields,field_description:stock_packaging_calculator.field_product_product__packaging_contained_mapping
+#. module: product_packaging_calculator
+#: model:ir.model.fields,field_description:product_packaging_calculator.field_product_product__packaging_contained_mapping
 msgid "Packaging Contained Mapping"
 msgstr "Mappatura contenuto confezione"
 
-#. module: stock_packaging_calculator
-#: model:ir.model,name:stock_packaging_calculator.model_product_qty_by_packaging_mixin
+#. module: product_packaging_calculator
+#: model:ir.model,name:product_packaging_calculator.model_product_qty_by_packaging_mixin
 msgid "Product Qty By Packaging (Mixin)"
 msgstr "Q.tà prodotto per confezione (mixin)"
 
-#. module: stock_packaging_calculator
-#: model:ir.model,name:stock_packaging_calculator.model_product_product
+#. module: product_packaging_calculator
+#: model:ir.model,name:product_packaging_calculator.model_product_product
 msgid "Product Variant"
 msgstr "Variante prodotto"
 
-#. module: stock_packaging_calculator
-#: model:ir.model.fields,field_description:stock_packaging_calculator.field_product_qty_by_packaging_mixin__product_qty_by_packaging_display
+#. module: product_packaging_calculator
+#: model:ir.model.fields,field_description:product_packaging_calculator.field_product_qty_by_packaging_mixin__product_qty_by_packaging_display
 msgid "Qty by packaging"
 msgstr "Q.tà per confezione"
 
-#. module: stock_packaging_calculator
-#: model:ir.model.fields,help:stock_packaging_calculator.field_product_product__packaging_contained_mapping
+#. module: product_packaging_calculator
+#: model:ir.model.fields,help:product_packaging_calculator.field_product_product__packaging_contained_mapping
 msgid "Technical field to store contained packaging. "
 msgstr "Campo tecnico per salvare la confezione contenuta. "
