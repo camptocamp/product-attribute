@@ -1,7 +1,7 @@
 # Copyright 2021 Camptocamp SA
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl)
 {
-    "name": "Stock packaging calculator packaging level",
+    "name": "Product packaging calculator packaging level",
     "summary": "Glue module for packaging level",
     "version": "18.0.1.0.0",
     "development_status": "Beta",
@@ -12,5 +12,5 @@
     "application": False,
     "installable": True,
     "auto_install": False,
-    "depends": ["stock_packaging_calculator", "product_packaging_level"],
+    "depends": ["product_packaging_calculator", "product_packaging_level"],
 }
