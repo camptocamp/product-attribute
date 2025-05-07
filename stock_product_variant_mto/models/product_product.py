@@ -23,7 +23,7 @@ class ProductProduct(models.Model):
     )
 
     route_ids = fields.Many2many(
-        "stock.location.route",
+        "stock.route",
         compute="_compute_route_ids",
         domain="[('product_selectable', '=', True)]",
         store=False,

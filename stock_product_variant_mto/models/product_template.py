@@ -1,7 +1,7 @@
 # Copyright 2023 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ProductTemplate(models.Model):
@@ -37,9 +37,10 @@ class ProductTemplate(models.Model):
             # Return warning activating MTO route
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
-                        "Activating MTO route will reset `Variant is MTO` setting on the variants."
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
+                        "Activating MTO route will reset `Variant is MTO` "
+                        "setting on the variants."
                     ),
                 }
             }
@@ -50,9 +51,10 @@ class ProductTemplate(models.Model):
             # Return warning deactivating MTO route
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
-                        "Deactivating MTO route will reset `Variant is MTO` setting on the variants."
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
+                        "Deactivating MTO route will reset `Variant is MTO` "
+                        "setting on the variants."
                     ),
                 }
             }
