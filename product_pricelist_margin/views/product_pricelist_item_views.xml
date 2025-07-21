@@ -41,6 +41,8 @@
                     <field name="cost" invisible="1" />
                     <field name="margin" />
                     <field name="margin_percent" />
+                    <field name="original_price" />
+                    <field name="final_price" />
                 </group>
             </xpath>
         </field>
