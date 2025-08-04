@@ -11,6 +11,9 @@ class SaleOrderLine(models.Model):
     def _can_be_sold_error_condition(self):
         self.ensure_one()
         return self.product_packaging_id and not self.product_packaging_id.sales
+    
+    def _is_packaging_multiple_check_enabled(self):     
+        return self.env.company.packaging_multiple 
 
     @api.constrains("product_packaging_id")
     def _check_product_packaging_can_be_sold(self):
