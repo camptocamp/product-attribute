@@ -50,3 +50,22 @@ class TestPackagingLevelCanBeSold(Common):
         # Changing the can_be_sold on the packaging_level does not update the packaging
         self.packaging_level_cannot_be_sold.can_be_sold = True
         self.assertEqual(self.packaging_cannot_be_sold.sales, False)
+
+    def test_check_pkg_qty_multiple(self):
+        """Test the _check_pkg_qty_multiple method in different scenarios."""
+        self.order_line.write(
+            {
+                "product_packaging_id": self.packaging_tu.id,
+                "product_uom_qty": 20.0,  # Is multiple of packaging quantity
+            }
+        )
+
+        # Set a quantity that is not a multiple of the packaging quantity
+        with self.assertRaisesRegex(
+            ValidationError, r"This product is packaged by.*You should sell"
+        ):
+            self.order_line.product_uom_qty = 25.0
+
+        # Test with disabled packaging_multiple check
+        self.env.company.packaging_multiple = False
+        self.order_line.product_uom_qty = 25.0
