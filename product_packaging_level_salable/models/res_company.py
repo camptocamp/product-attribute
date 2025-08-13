@@ -6,4 +6,4 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    sale_check_packaging_multiple = fields.Boolean(default=True)
+    sale_check_packaging_multiple = fields.Boolean()

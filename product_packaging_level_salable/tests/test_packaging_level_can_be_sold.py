@@ -59,13 +59,12 @@ class TestPackagingLevelCanBeSold(Common):
                 "product_uom_qty": 20.0,  # Is multiple of packaging quantity
             }
         )
+        # sale_check_packaging_multiple False by default - no error
+        self.order_line.product_uom_qty = 25.0
 
         # Set a quantity that is not a multiple of the packaging quantity
+        self.env.company.sale_check_packaging_multiple = True
         with self.assertRaisesRegex(
             ValidationError, r"This product is packaged by.*You should sell"
         ):
             self.order_line.product_uom_qty = 25.0
-
-        # Test with disabled sale_check_packaging_multiple check
-        self.env.company.sale_check_packaging_multiple = False
-        self.order_line.product_uom_qty = 25.0
