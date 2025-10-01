@@ -14,7 +14,6 @@ class ProductProduct(models.Model):
     dimensional_uom_id = fields.Many2one(
         "uom.uom",
         "Dimensional UoM",
-        domain=lambda self: self._get_dimension_uom_domain(),
         help="UoM for length, height, width",
         default=lambda self: self.env.ref("uom.product_uom_meter"),
     )
@@ -36,7 +35,3 @@ class ProductProduct(models.Model):
                 product.product_width,
                 product.dimensional_uom_id,
             )
-
-    @api.model
-    def _get_dimension_uom_domain(self):
-        return [("category_id", "=", self.env.ref("uom.uom_categ_length").id)]
