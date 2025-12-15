@@ -13,8 +13,8 @@ class TestProductNameSearch(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.supplier = cls.env.ref("base.res_partner_1")
-        cls.customer = cls.env.ref("base.res_partner_2")
+        cls.supplier = cls.env["res.partner"].create({"name": "Supplier"})
+        cls.customer = cls.env["res.partner"].create({"name": "Customer"})
         cls.product = (
             cls.env["product.product"]
             .create({"name": "Name_product", "default_code": "code_product"})
@@ -50,7 +50,7 @@ class TestProductNameSearch(BaseCommon):
         product_names = product_template.name_search(name="code_test")
         self.assertEqual(len(product_names), 1)
         self.assertEqual(product_template.id, product_names[0][0])
-        self.assertEqual("[code_test] Name_test", product_names[0][1])
+        self.assertEqual("[code_product] Name_product", product_names[0][1])
 
         # Search by product default code with the customer used in
         # configuration customer
