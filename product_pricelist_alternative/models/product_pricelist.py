@@ -29,15 +29,12 @@ class Pricelist(models.Model):
 
     @api.depends("is_alternative_to_pricelist_ids")
     def _compute_is_alternative_to_pricelist_count(self):
-        groups = self.read_group(
+        groups = self.env["product.pricelist"]._read_group(
             [("alternative_pricelist_ids", "in", self.ids)],
             ["alternative_pricelist_ids"],
-            "alternative_pricelist_ids",
-            lazy=False,
+            ["__count"],
         )
-        data = {
-            group["alternative_pricelist_ids"][0]: group["__count"] for group in groups
-        }
+        data = {pricelist.id: count for pricelist, count in groups}
         for pricelist in self:
             pricelist.is_alternative_to_pricelist_count = data.get(pricelist.id, 0)
 
@@ -61,6 +58,7 @@ class Pricelist(models.Model):
         self,
         products,
         quantity,
+        *,
         currency=None,
         uom=None,
         date=False,
@@ -87,6 +85,9 @@ class Pricelist(models.Model):
         if self.env.context.get("skip_alternative_pricelist", False):
             return res
 
+        effective_currency = (
+            currency or self.currency_id or self.env.company.currency_id
+        )
         for product in products:
             reference_pricelist_item = self.env["product.pricelist.item"].browse(
                 res[product.id][1]
@@ -106,7 +107,12 @@ class Pricelist(models.Model):
                         **kwargs,
                     )
                     # use alternative price if lower
-                    if alternative_price_rule[product.id][0] < res[product.id][0]:
+                    if (
+                        effective_currency.compare_amounts(
+                            alternative_price_rule[product.id][0], res[product.id][0]
+                        )
+                        < 0
+                    ):
                         res[product.id] = alternative_price_rule[product.id]
         return res
 

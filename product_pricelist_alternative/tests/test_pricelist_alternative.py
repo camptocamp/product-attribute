@@ -39,7 +39,7 @@ class TestPricelistAlternative(CommonProductPricelistAlternative):
 
         # Best price on alternative pricelist01
         result = self.pricelist01._compute_price_rule(
-            self.usb_adapter, 1.0, self.usb_adapter.uom_id
+            self.usb_adapter, 1.0, uom=self.usb_adapter.uom_id
         )
         self.assertEqual(result[self.usb_adapter.id][0], 70.0)
         self.assertEqual(
@@ -47,7 +47,7 @@ class TestPricelistAlternative(CommonProductPricelistAlternative):
         )
         # Best price on pricelist02
         result = self.pricelist02._compute_price_rule(
-            self.usb_adapter, 1.0, self.usb_adapter.uom_id
+            self.usb_adapter, 1.0, uom=self.usb_adapter.uom_id
         )
         self.assertEqual(result[self.usb_adapter.id][0], 60.0)
         self.assertEqual(
@@ -66,14 +66,14 @@ class TestPricelistAlternative(CommonProductPricelistAlternative):
         self.assertEqual(self.pricelist02._get_product_price(self.usb_adapter, 1.0), 60)
 
         result = self.pricelist01._compute_price_rule(
-            self.usb_adapter, 1.0, self.usb_adapter.uom_id
+            self.usb_adapter, 1.0, uom=self.usb_adapter.uom_id
         )
         self.assertEqual(result[self.usb_adapter.id][0], 95.0)
         self.assertEqual(
             result[self.usb_adapter.id][1], self.pricelist01.item_ids[1].id
         )
         result = self.pricelist02._compute_price_rule(
-            self.usb_adapter, 1.0, self.usb_adapter.uom_id
+            self.usb_adapter, 1.0, uom=self.usb_adapter.uom_id
         )
         self.assertEqual(result[self.usb_adapter.id][0], 60.0)
         self.assertEqual(
