@@ -10,7 +10,6 @@ class Pricelist(models.Model):
 
     alternative_pricelist_ids = fields.Many2many(
         comodel_name="product.pricelist",
-        string="Alternative pricelists",
         relation="product_pricelist_alternative_rel",
         column1="origin_id",
         column2="alternative_id",
@@ -18,7 +17,6 @@ class Pricelist(models.Model):
     )
     is_alternative_to_pricelist_ids = fields.Many2many(
         comodel_name="product.pricelist",
-        string="Is alternative to pricelists",
         relation="product_pricelist_alternative_rel",
         column1="alternative_id",
         column2="origin_id",
@@ -29,15 +27,12 @@ class Pricelist(models.Model):
 
     @api.depends("is_alternative_to_pricelist_ids")
     def _compute_is_alternative_to_pricelist_count(self):
-        groups = self.read_group(
+        groups = self._read_group(
             [("alternative_pricelist_ids", "in", self.ids)],
             ["alternative_pricelist_ids"],
-            "alternative_pricelist_ids",
-            lazy=False,
+            ["__count"],
         )
-        data = {
-            group["alternative_pricelist_ids"][0]: group["__count"] for group in groups
-        }
+        data = {pricelist.id: count for pricelist, count in groups}
         for pricelist in self:
             pricelist.is_alternative_to_pricelist_count = data.get(pricelist.id, 0)
 
@@ -57,16 +52,34 @@ class Pricelist(models.Model):
             )
         return action
 
+    def _get_alternative_pricing_product(self, product):
+        """Return the product template to use for alternative pricing."""
+        if product._name != "product.template":
+            return product
+        combination_ids = product.env.context.get(
+            "product_pricelist_alternative_combination_ids"
+        )
+        if not combination_ids:
+            return product
+        combination = product.env["product.template.attribute.value"].browse(
+            combination_ids
+        )
+        variant = product._get_variant_for_combination(combination)
+        return variant or product
+
     def _compute_price_rule(
         self,
         products,
         quantity,
+        *,
         currency=None,
         uom=None,
         date=False,
         compute_price=True,
         **kwargs,
     ):
+        # OVERRIDE: to compare the regular price with alternative pricelists
+        # and keep the lower price when the pricelist item policy allows it.
         # This context key is used in `sale.order::_recompute_prices()`,
         # triggered by `action_update_prices()` button that recomputes
         # the unit price of all products based on the new pricelist.
@@ -87,6 +100,9 @@ class Pricelist(models.Model):
         if self.env.context.get("skip_alternative_pricelist", False):
             return res
 
+        effective_currency = (
+            currency or self.currency_id or self.env.company.currency_id
+        )
         for product in products:
             reference_pricelist_item = self.env["product.pricelist.item"].browse(
                 res[product.id][1]
@@ -95,9 +111,14 @@ class Pricelist(models.Model):
                 reference_pricelist_item.alternative_pricelist_policy
                 == "use_lower_price"
             ):
+                # If a product template with variants is selected on the sale
+                # order line and the sale configurator is opened, resolve the
+                # selected combination to ensure variant specific lower price
+                # alternative rules can match.
+                alternative_product = self._get_alternative_pricing_product(product)
                 for alternative_pricelist in self.alternative_pricelist_ids:
                     alternative_price_rule = alternative_pricelist._compute_price_rule(
-                        product,
+                        alternative_product,
                         quantity,
                         currency=currency,
                         uom=uom,
@@ -105,9 +126,15 @@ class Pricelist(models.Model):
                         compute_price=compute_price,
                         **kwargs,
                     )
+                    alternative_result = alternative_price_rule[alternative_product.id]
                     # use alternative price if lower
-                    if alternative_price_rule[product.id][0] < res[product.id][0]:
-                        res[product.id] = alternative_price_rule[product.id]
+                    if (
+                        effective_currency.compare_amounts(
+                            alternative_result[0], res[product.id][0]
+                        )
+                        < 0
+                    ):
+                        res[product.id] = alternative_result
         return res
 
     @api.constrains("alternative_pricelist_ids")
