@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
+    <!-- prettier-ignore-start -->
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'product_state'),
-                ('model', '=', 'product.state')]"
-            />
+            <value eval="[('module', '=', 'product_state'), ('model', '=', 'product.state')]"/>
         </function>
         <value eval="{'noupdate': False}" />
     </function>
+    <!-- prettier-ignore-end -->
 
     <record id="product_state.product_state_draft" model="product.state">
         <field name="active" eval="False" />
@@ -22,13 +21,12 @@
         <field name="active" eval="False" />
     </record>
 
+    <!-- prettier-ignore-start -->
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'product_state'),
-                ('model', '=', 'product.state')]"
-            />
+            <value eval="[('module', '=', 'product_state'), ('model', '=', 'product.state')]"/>
         </function>
         <value eval="{'noupdate': True}" />
     </function>
+    <!-- prettier-ignore-end -->
 </odoo>
