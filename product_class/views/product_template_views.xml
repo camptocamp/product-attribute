@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[contains(@name, 'general')]" position="inside">
+                <field name="class_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_form_attribute_class" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='attribute_line_ids']" position="attributes">
+                <attribute
+                    name="domain"
+                >[('attribute_id', 'in', class_id.attribute_ids.ids if class_id else [])]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
