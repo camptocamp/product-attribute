@@ -6,21 +6,11 @@ from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
 
-def _make_attr_line(env, product, attribute, values):
-    """Helper: create a product.template.attribute.line with required values."""
-    return env["product.template.attribute.line"].create(
-        {
-            "product_tmpl_id": product.id,
-            "attribute_id": attribute.id,
-            "value_ids": [Command.set(values.ids)],
-        }
-    )
-
-
 class TestProductClass(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.size_attr = cls.env["product.attribute"].create({"name": "Size"})
         cls.size_value = cls.env["product.attribute.value"].create(
             {"name": "M", "attribute_id": cls.size_attr.id}
@@ -30,35 +20,52 @@ class TestProductClass(TransactionCase):
             {"name": "Red", "attribute_id": cls.color_attr.id}
         )
 
+    def _create_product_attribute_line(self, product, attribute, values):
+        return self.env["product.template.attribute.line"].create(
+            {
+                "product_tmpl_id": product.id,
+                "attribute_id": attribute.id,
+                "value_ids": [Command.set(values.ids)],
+            }
+        )
+
+    def _make_class_attribute_line(self, attribute, required=False):
+        return Command.create(
+            {
+                "attribute_id": attribute.id,
+                "required": required,
+            }
+        )
+
+    def _create_product_class(self, name, line_commands):
+        return self.env["product.class"].create(
+            {
+                "name": name,
+                "attribute_line_ids": line_commands,
+            }
+        )
+
     def test_product_with_compatible_class(self):
-        """
-        Assigning a class whose attribute matches
-        the product's attribute line passes.
-        """
-        product_class = self.env["product.class"].create(
-            {"name": "Test Class", "attribute_ids": [Command.set([self.size_attr.id])]}
+        """A product can use a class when its attributes match."""
+        product_class = self._create_product_class(
+            "Test Class",
+            [self._make_class_attribute_line(self.size_attr, required=True)],
         )
         product = self.env["product.template"].create({"name": "Product 1"})
-        _make_attr_line(self.env, product, self.size_attr, self.size_value)
+        self._create_product_attribute_line(product, self.size_attr, self.size_value)
 
         product.write({"class_id": product_class.id})
 
         self.assertEqual(product.class_id, product_class)
 
     def test_constraint_raises_on_incompatible_attribute_write(self):
-        """
-        Constraint raises when writing an incompatible attribute
-        to a product with a class.
-        """
-        product_class = self.env["product.class"].create(
-            {
-                "name": "Test Class 2",
-                "attribute_ids": [Command.set([self.size_attr.id])],
-            }
+        """A classed product cannot add attributes outside its class."""
+        product_class = self._create_product_class(
+            "Test Class 2", [self._make_class_attribute_line(self.size_attr)]
         )
         product = self.env["product.template"].create({"name": "Product 2"})
-        _make_attr_line(self.env, product, self.size_attr, self.size_value)
-        product.class_id = product_class  # OK — size is in class
+        self._create_product_attribute_line(product, self.size_attr, self.size_value)
+        product.class_id = product_class
 
         with self.assertRaisesRegex(
             ValidationError, "do not belong to the selected class"
@@ -77,36 +84,30 @@ class TestProductClass(TransactionCase):
             )
 
     def test_constraint_raises_on_incompatible_class_change(self):
-        """
-        Constraint raises when class_id is changed to
-        one that excludes existing lines.
-        """
-        color_class = self.env["product.class"].create(
-            {
-                "name": "Color Class",
-                "attribute_ids": [Command.set([self.color_attr.id])],
-            }
+        """Changing to an incompatible class must raise a validation error."""
+        color_class = self._create_product_class(
+            "Color Class", [self._make_class_attribute_line(self.color_attr)]
         )
         product = self.env["product.template"].create({"name": "Product 3"})
-        _make_attr_line(self.env, product, self.color_attr, self.color_value)
-        product.class_id = color_class  # OK — color is in class
+        self._create_product_attribute_line(product, self.color_attr, self.color_value)
+        product.class_id = color_class
 
-        size_class = self.env["product.class"].create(
-            {"name": "Size Class", "attribute_ids": [Command.set([self.size_attr.id])]}
+        size_class = self._create_product_class(
+            "Size Class", [self._make_class_attribute_line(self.size_attr)]
         )
         with self.assertRaisesRegex(
             ValidationError,
             "Please remove these attributes or change the product class",
         ):
-            product.class_id = size_class  # color is NOT in size_class → should raise
+            product.class_id = size_class
 
     def test_clearing_class_id_removes_constraint(self):
         """Removing class_id from a product allows any attribute afterwards."""
-        product_class = self.env["product.class"].create(
-            {"name": "Size Only", "attribute_ids": [Command.set([self.size_attr.id])]}
+        product_class = self._create_product_class(
+            "Size Only", [self._make_class_attribute_line(self.size_attr)]
         )
         product = self.env["product.template"].create({"name": "Product 5"})
-        _make_attr_line(self.env, product, self.size_attr, self.size_value)
+        self._create_product_attribute_line(product, self.size_attr, self.size_value)
         product.class_id = product_class
 
         with self.assertRaisesRegex(
@@ -127,7 +128,6 @@ class TestProductClass(TransactionCase):
 
         product.class_id = False
 
-        # Now color (not in the former class) should be allowed
         product.write(
             {
                 "attribute_line_ids": [
@@ -166,8 +166,8 @@ class TestProductClass(TransactionCase):
 
     def test_classed_product_with_no_attribute_lines_is_valid(self):
         """A product with a class but no attribute lines is valid."""
-        product_class = self.env["product.class"].create(
-            {"name": "Hammers", "attribute_ids": [Command.set([self.size_attr.id])]}
+        product_class = self._create_product_class(
+            "Hammers", [self._make_class_attribute_line(self.size_attr)]
         )
         product = self.env["product.template"].create(
             {"name": "Product 7", "class_id": product_class.id}
@@ -177,13 +177,12 @@ class TestProductClass(TransactionCase):
 
     def test_cannot_remove_class_attribute_used_in_products(self):
         """Removing an attribute from class is forbidden if products still use it."""
-        product_class = self.env["product.class"].create(
-            {
-                "name": "Furniture Class",
-                "attribute_ids": [
-                    Command.set([self.size_attr.id, self.color_attr.id]),
-                ],
-            }
+        product_class = self._create_product_class(
+            "Furniture Class",
+            [
+                self._make_class_attribute_line(self.size_attr),
+                self._make_class_attribute_line(self.color_attr),
+            ],
         )
         product_1 = self.env["product.template"].create(
             {"name": "Chair", "class_id": product_class.id}
@@ -191,31 +190,48 @@ class TestProductClass(TransactionCase):
         product_2 = self.env["product.template"].create(
             {"name": "Table", "class_id": product_class.id}
         )
-        _make_attr_line(self.env, product_1, self.size_attr, self.size_value)
-        _make_attr_line(self.env, product_1, self.color_attr, self.color_value)
-        _make_attr_line(self.env, product_2, self.color_attr, self.color_value)
+        self._create_product_attribute_line(product_1, self.size_attr, self.size_value)
+        self._create_product_attribute_line(
+            product_1, self.color_attr, self.color_value
+        )
+        self._create_product_attribute_line(
+            product_2, self.color_attr, self.color_value
+        )
 
         with self.assertRaisesRegex(
             ValidationError,
             "Please remove these attributes or change the product class",
         ):
-            product_class.write({"attribute_ids": [Command.set([self.size_attr.id])]})
+            product_class.write(
+                {
+                    "attribute_line_ids": [
+                        Command.clear(),
+                        self._make_class_attribute_line(self.size_attr),
+                    ]
+                }
+            )
 
     def test_attribute_classes_count_updates_from_linked_classes(self):
         """Attribute class counters reflect the linked product classes."""
-        product_class = self.env["product.class"].create(
-            {
-                "name": "Counted Class",
-                "attribute_ids": [
-                    Command.set([self.size_attr.id, self.color_attr.id]),
-                ],
-            }
+        product_class = self._create_product_class(
+            "Counted Class",
+            [
+                self._make_class_attribute_line(self.size_attr),
+                self._make_class_attribute_line(self.color_attr),
+            ],
         )
 
         self.assertEqual(self.size_attr.classes_count, 1)
         self.assertEqual(self.color_attr.classes_count, 1)
 
-        product_class.write({"attribute_ids": [Command.set([self.size_attr.id])]})
+        product_class.write(
+            {
+                "attribute_line_ids": [
+                    Command.clear(),
+                    self._make_class_attribute_line(self.size_attr),
+                ]
+            }
+        )
 
         self.assertEqual(self.size_attr.classes_count, 1)
         self.assertEqual(self.color_attr.classes_count, 0)
@@ -225,3 +241,45 @@ class TestProductClass(TransactionCase):
         self.env["product.class"].create({"name": "Unique Class"})
         with self.assertRaises(IntegrityError), mute_logger("odoo.sql_db"):
             self.env["product.class"].create({"name": "Unique Class"})
+
+    def test_required_attributes_must_be_defined_on_products(self):
+        """Products with class_id must define all required class attributes."""
+        product_class = self._create_product_class(
+            "Required Class",
+            [
+                self._make_class_attribute_line(self.size_attr, required=True),
+                self._make_class_attribute_line(self.color_attr),
+            ],
+        )
+        product = self.env["product.template"].create({"name": "Product 8"})
+        self._create_product_attribute_line(product, self.color_attr, self.color_value)
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            "is missing required attributes for the selected class",
+        ):
+            product.class_id = product_class
+
+    def test_required_attributes_accept_product_when_defined(self):
+        """Products can be assigned to class when all required attributes exist."""
+        product_class = self._create_product_class(
+            "Required Class 2",
+            [self._make_class_attribute_line(self.size_attr, required=True)],
+        )
+        product = self.env["product.template"].create({"name": "Product 9"})
+        self._create_product_attribute_line(product, self.size_attr, self.size_value)
+
+        product.class_id = product_class
+        # No exception should be raised
+        self.assertEqual(product.class_id, product_class)
+
+    def test_class_attribute_line_is_unique_per_class(self):
+        """A class cannot configure the same attribute more than once."""
+        with self.assertRaises(IntegrityError), mute_logger("odoo.sql_db"):
+            self._create_product_class(
+                "Duplicate Attr Class",
+                [
+                    self._make_class_attribute_line(self.size_attr),
+                    self._make_class_attribute_line(self.size_attr),
+                ],
+            )

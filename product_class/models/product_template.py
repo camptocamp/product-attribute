@@ -12,10 +12,37 @@ class ProductTemplate(models.Model):
     )
 
     class_attribute_ids = fields.Many2many(
-        related="class_id.attribute_ids",
+        comodel_name="product.attribute",
+        compute="_compute_class_attribute_ids",
         string="Class Attributes",
         help="Attributes allowed by the selected product class",
     )
+
+    class_required_attribute_ids = fields.Many2many(
+        comodel_name="product.attribute",
+        compute="_compute_class_attribute_ids",
+        string="Class Required Attributes",
+        help="Required attributes for the selected product class.",
+    )
+
+    @api.depends(
+        "class_id",
+        "class_id.attribute_line_ids",
+        "class_id.attribute_line_ids.attribute_id",
+        "class_id.attribute_line_ids.required",
+    )
+    def _compute_class_attribute_ids(self):
+        for product in self:
+            if not product.class_id:
+                product.class_attribute_ids = False
+                product.class_required_attribute_ids = False
+                continue
+
+            class_lines = product.class_id.attribute_line_ids
+            product.class_attribute_ids = class_lines.attribute_id
+            product.class_required_attribute_ids = class_lines.filtered(
+                "required"
+            ).attribute_id
 
     @api.constrains("class_id", "attribute_line_ids")
     def _check_class_attributes(self):
@@ -26,7 +53,8 @@ class ProductTemplate(models.Model):
             if not product.class_id:
                 continue
 
-            class_attributes = product.class_id.attribute_ids
+            class_lines = product.class_id.attribute_line_ids
+            class_attributes = class_lines.attribute_id
             invalid_attributes = (
                 product.attribute_line_ids.attribute_id - class_attributes
             )
@@ -41,5 +69,24 @@ class ProductTemplate(models.Model):
                         product=product.name,
                         product_class=product.class_id.name,
                         attrs=invalid_names,
+                    )
+                )
+
+            required_attributes = class_lines.filtered("required").attribute_id
+            missing_attributes = (
+                required_attributes - product.attribute_line_ids.attribute_id
+            )
+
+            if missing_attributes:
+                missing_names = ", ".join(
+                    sorted(missing_attributes.mapped("display_name"))
+                )
+                raise ValidationError(
+                    self.env._(
+                        "Product '%(product)s' is missing required attributes "
+                        "for the selected class '%(product_class)s': %(attrs)s.",
+                        product=product.name,
+                        product_class=product.class_id.name,
+                        attrs=missing_names,
                     )
                 )

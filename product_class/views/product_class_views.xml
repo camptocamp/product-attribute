@@ -14,11 +14,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
-                <field
-                    name="attribute_ids"
-                    widget="many2many_tags"
-                    options="{'no_create': True}"
-                />
+                <field name="attribute_line_ids" />
             </list>
         </field>
     </record>
@@ -32,7 +28,12 @@
                         <field name="name" />
                     </group>
                     <separator string="Attributes" />
-                    <field name="attribute_ids" />
+                    <field name="attribute_line_ids">
+                        <list editable="bottom">
+                            <field name="attribute_id" options="{'no_create': True}" />
+                            <field name="required" />
+                        </list>
+                    </field>
                 </sheet>
             </form>
         </field>

@@ -9,24 +9,22 @@ class ProductAttribute(models.Model):
         compute="_compute_classes_count",
     )
 
-    class_ids = fields.Many2many(
-        comodel_name="product.class",
-        relation="product_class_attribute_rel",
-        column1="attribute_id",
-        column2="product_class_id",
-        string="Product Classes",
-        help="Product classes that include this attribute",
+    class_attribute_line_ids = fields.One2many(
+        comodel_name="product.class.attribute.line",
+        inverse_name="attribute_id",
+        string="Class Attribute Lines",
+        help="Product classes that include this attribute.",
     )
 
-    @api.depends("class_ids")
+    @api.depends("class_attribute_line_ids.class_id")
     def _compute_classes_count(self):
         for attribute in self:
-            attribute.classes_count = len(attribute.class_ids)
+            attribute.classes_count = len(attribute.class_attribute_line_ids.class_id)
 
     def action_open_product_classes(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
             "product_class.product_class_action"
         )
-        action["domain"] = [("id", "in", self.class_ids.ids)]
+        action["domain"] = [("id", "in", self.class_attribute_line_ids.class_id.ids)]
         return action
