@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2026 Camptocamp SA (https://www.camptocamp.com).
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="product_packaging_list_view" model="ir.ui.view">
+        <field name="model">product.packaging</field>
+        <field name="arch" type="xml">
+            <list string="Packagings" editable="bottom">
+                <field name="sequence" widget="handle" />
+                <field
+                    name="uom_id"
+                    domain="[('id', '!=', parent.uom_id)]"
+                    options="{'no_quick_create': True}"
+                    context="{'product_id': product_id}"
+                />
+                <field name="qty" />
+                <field name="product_uom_id" />
+                <field name="weight" />
+                <field name="weight_uom_name" string="" />
+                <field name="volume" />
+                <field name="volume_uom_name" string="" />
+                <field
+                    name="barcode_ids"
+                    widget="many2many_barcode_tags"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                    context="{'default_product_id': product_id, 'default_uom_id': uom_id}"
+                    force_save="1"
+                />
+            </list>
+        </field>
+    </record>
+</odoo>
