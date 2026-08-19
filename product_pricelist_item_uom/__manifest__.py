@@ -7,7 +7,7 @@
     "version": "19.0.1.0.0",
     "category": "Sales/Sales",
     "website": "https://github.com/OCA/product-attribute",
-    "author": "Aion Tech, Odoo Community Association (OCA)",
+    "author": "Aion Tech, Camptocamp SA, Odoo Community Association (OCA)",
     "maintainers": [
         "SirAionTech",
     ],
@@ -19,5 +19,7 @@
     "data": [
         "views/product_pricelist_item_views.xml",
         "views/product_pricelist_views.xml",
+        "views/product_views.xml",
+        "report/product_pricelist_report_templates.xml",
     ],
 }

@@ -1,101 +1,53 @@
-#  Copyright 2023 Simone Rubino - Aion Tech
-#  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+# Copyright 2026 Camptocamp SA (https://www.camptocamp.com).
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.tools import float_compare
 
 
 class ProductPricelistItem(models.Model):
     _inherit = "product.pricelist.item"
 
     uom_id = fields.Many2one(
-        string="UoM",
+        string="Packaging",
         comodel_name="uom.uom",
-        compute="_compute_uom_id",
-        store=True,
-        readonly=False,
+        help="Restrict this rule to a specific packaging of the product. "
+        "When empty, the rule applies to the product base unit of measure.",
     )
-    uom_min_quantity = fields.Float(
-        string="Min. Quantity in UoM",
-        digits="Product Unit",
-        compute="_compute_uom_min_quantity",
-        store=True,
-        readonly=False,
-    )
+    allowed_uom_ids = fields.Many2many("uom.uom", compute="_compute_allowed_uom_ids")
 
-    @api.depends(
-        "product_id",
-        "product_tmpl_id",
-    )
-    def _compute_uom_id(self):
+    @api.depends("product_tmpl_id", "product_tmpl_id.uom_id", "product_tmpl_id.uom_ids")
+    def _compute_allowed_uom_ids(self):
         for item in self:
-            product = item.product_id or item.product_tmpl_id
-            product_uom = product.uom_id
-            if item.uom_id != product_uom:
-                item.uom_id = product_uom
+            item.allowed_uom_ids = (
+                item.product_tmpl_id.uom_id | item.product_tmpl_id.uom_ids
+            )
 
-    def _sync_uom_min_quantity(
-        self, source_quantity, source_uom, target_uom, target_qty_field
+    @api.model_create_multi
+    def create(self, vals_list):
+        items = super().create(vals_list)
+        items.filtered(
+            lambda item: item.applied_on == "2_product_category"
+        ).uom_id = False
+        return items
+
+    def write(self, vals):
+        if vals.get("applied_on") == "2_product_category":
+            vals["uom_id"] = False
+        return super().write(vals)
+
+    def _is_applicable_for(
+        self, product, quantity, *, uom=None, qty_in_product_uom=False, **kwargs
     ):
-        """Convert `source_quantity` (in `source_uom`) to `target_uom`.
-        Assign the result to field `self.target_qty_field`, if different."""
         self.ensure_one()
-        if target_uom != source_uom:
-            expected_target_quantity = source_uom._compute_quantity(
-                source_quantity,
-                target_uom,
-                raise_if_failure=False,
-                round=False,
-            )
-        else:
-            expected_target_quantity = source_quantity
+        product.ensure_one()
+        product_uom = product.uom_id
+        uom = uom or product_uom
+        if self.uom_id and uom != self.uom_id:
+            return False
+        qty_to_consider = quantity
+        if uom not in product_uom + self.uom_id:
+            # The requested UoM is not one of the UoMs the rule is expressed in,
+            # so the quantity has to be converted to the product base UoM.
+            qty_to_consider = uom._compute_quantity(quantity, product_uom)
 
-        # Assign only if different,
-        # according to the precision of target field
-        all_digits, precision_digits = self.fields_get(
-            allfields=[
-                target_qty_field,
-            ],
-            attributes=[
-                "digits",
-            ],
-        )[target_qty_field]["digits"]
-        if float_compare(
-            self[target_qty_field],
-            expected_target_quantity,
-            precision_digits=precision_digits,
-        ):
-            self[target_qty_field] = expected_target_quantity
-
-    @api.onchange(
-        "product_id",
-        "product_tmpl_id",
-        "uom_id",
-        "uom_min_quantity",
-    )
-    def onchange_uom_min_quantity(self):
-        for item in self:
-            product = item.product_id or item.product_tmpl_id
-            product_uom = product.uom_id
-            item._sync_uom_min_quantity(
-                item.uom_min_quantity,
-                item.uom_id,
-                product_uom,
-                "min_quantity",
-            )
-
-    @api.depends(
-        "product_id",
-        "product_tmpl_id",
-        "min_quantity",
-    )
-    def _compute_uom_min_quantity(self):
-        for item in self:
-            product = item.product_id or item.product_tmpl_id
-            product_uom = product.uom_id
-            item._sync_uom_min_quantity(
-                item.min_quantity,
-                product_uom,
-                item.uom_id,
-                "uom_min_quantity",
-            )
+        return super()._is_applicable_for(product, qty_to_consider)
