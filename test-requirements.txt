@@ -1,1 +1,2 @@
 odoo-addon-product_packaging @git+https://github.com/OCA/product-attribute@refs/pull/2320/head#subdirectory=product_packaging
+odoo-addon-product_packaging @ git+https://github.com/OCA/product-attribute.git@refs/pull/2320/head#subdirectory=product_packaging
