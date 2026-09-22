@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record model="ir.config_parameter" id="lot_unique_name_enabled">
+        <field name="key">stock_lot_unique_name.enabled</field>
+        <field name="value">False</field>
+    </record>
+</odoo>
